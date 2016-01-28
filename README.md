@@ -1,3 +1,3 @@
-# combine
 # clipccombine
-# clipccombine
+
+CLIPC Combine Indecators pyWMS
