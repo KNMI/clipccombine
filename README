@@ -1,0 +1,10 @@
+USED BY PYWPS PROCESS IN CLIPC
+
+contact: clipc@knmi.nl
+
+run: python example1.py #uses nc's
+     python example2.py #uses wcs.
+
+NOTE: generates unique files per run, rm *.nc periodically.  Each is 70MB when using example code.
+
+

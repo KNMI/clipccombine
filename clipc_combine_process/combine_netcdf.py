@@ -18,6 +18,8 @@ def defaultCallback(message,percentage):
 def copyNetCDF(name, nc_fid , des ):
   w_nc_fid = netCDF4.Dataset(name, 'w', format='NETCDF4')
 
+  #PROVENANCE ADDED!!!!
+
   w_nc_fid.description = des
 
   for var_name, dimension in nc_fid.dimensions.iteritems():
