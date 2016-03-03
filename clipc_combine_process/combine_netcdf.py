@@ -5,6 +5,7 @@
 
 import numpy as np
 import netCDF4
+import clipc_wp8_norm as cn
 
 def defaultCallback(message,percentage):
   print "defaultCallback: "+mesysage
@@ -45,18 +46,19 @@ def copyNetCDF(name, nc_fid , des ):
 
 # combine two netcdfs based on operator after normalising by max value of each.
 #
-def combineNetCDFs(name, nc1 , var1 , nc2 , var2 , des , operator_func,callback=defaultCallback):
+def combineNetCDFs(name, nc1 , var1name , nc2 , var2name , des , operator_func , norm1cmd , norm2cmd , callback=defaultCallback):
   
   # result file is a copy of first imput, uncluding metadata
   nc_combo = copyNetCDF( name , nc1 , des )
 
-  v2 = nc2.variables[var2][:]
-  v1 = nc1.variables[var1][:]
+  v2 = nc2.variables[var2name][:]
+  v1 = nc1.variables[var1name][:]
 
-  m1 = v1.max()
-  m2 = v2.max()
+  # max norm depricated in favour of functions.
+  #m1 = v1.max()
+  #m2 = v2.max()
 
-  c = nc_combo.variables[var1][:]
+  c = nc_combo.variables[var1name][:]
 
 	# sepricated
 	# operator used previously, changed to np for speed.
@@ -70,10 +72,22 @@ def combineNetCDFs(name, nc1 , var1 , nc2 , var2 , des , operator_func,callback=
 
 	# np op functions used here
   callback("start combine",50)
-  c = operator_func( np.divide(v1,m1) , np.divide(v2,m2) )
+  #c = operator_func( np.divide(v1,m1) , np.divide(v2,m2) ) # depricated
+
+  n1 = cn.norm(v1,norm1cmd )
+
+  callback("norm1 done",55)
+
+  n2 = cn.norm(v2,norm2cmd )
+
+  callback("norm2 done",60)
+
+
+  c = operator_func( n1 , n2 )
+  
   callback("end combine",75)
 
-  nc_combo.variables[var1][:] = c
+  nc_combo.variables[var1name][:] = c
 
   return nc_combo
 # end combine

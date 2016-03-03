@@ -18,13 +18,18 @@ def defaultCallback(message,percentage):
 def getWCS( wcs_url1, 
 			bbox, 
 			time, 
-			output_file='wcs_output.nc',callback=defaultCallback ):
+			output_file='wcs_output.nc',
+			width=300,
+			height=300,
+			callback=defaultCallback ):
 
 	# Describe Coverage: used to id layer,
 	# data also available in getCapabilities...
 	values_describe = [  ('SERVICE' , 'WCS'), ('REQUEST' , 'DescribeCoverage') ]
 	data_describe = urllib.urlencode(values_describe)
 	request_describe =  wcs_url1 + "&" + str(data_describe)
+
+	print request_describe
 
 	#print request_describe
 	response = urllib2.urlopen( request_describe )
@@ -54,8 +59,8 @@ def getWCS( wcs_url1,
 				('CRS'     , crs ),  
 				('FORMAT'  , 'NetCDF') ,
 				('BBOX'    , bbox ),
-				('WIDTH' , 400 ),
-				('HEIGHT', 300 ) 
+				('WIDTH' , width ),
+				('HEIGHT', height ) 
 				]
 
 	if time is not None:

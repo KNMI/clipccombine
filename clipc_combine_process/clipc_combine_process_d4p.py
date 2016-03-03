@@ -42,7 +42,7 @@ def defaultCallback(message,percentage):
 #def combine_two_indecies(url1,url2,operation,output,callback=defaultCallback):
 
 def collect(url):
-  print "in collector ",url
+#print "in collector ",url
   
   nc = netCDF4.Dataset(url,'r')
 
@@ -73,45 +73,47 @@ def collect(url):
 #   return combi , name
 
 def read(nc):
-  print "in read ", str(nc)
-  variable = getTitleNC(nc)
-  print "TITLE:",variable
+#print "in read ", str(nc)
+  variableName = getTitleNC(nc)
+  print "TITLE:",variableName
 
-  v = nc.variables[variable][:]
+  v[:] = nc.variables[variableName][:]
 
   # normalisation
   n = v.max()
 
   return (v, n)
 
-def write(nc,outName,des):
-  print "in preprocess nc is     ",str(nc)
+#def write(nc,outName,des):
+def write(url,outName,des):
+#print "in preprocess nc is     ",str(nc)
   print "in preprocess output is ",outName
   print "in preprocess des       ",des
 
+  nc =  collect(url)
+
   variable = getTitleNC(nc)
 
-  print "in preprocess variable name is " , variable
+#  print "in preprocess variable name is " , variable
 
   nc_combo = copyNetCDF( outName , nc , des )
-
 
 
   return (nc_combo, variable)
 
 
 def combine(  var1, norm1 , var2 , norm2 , operator_symbol ):
-  print "in preprocess ",var1, " ",norm1
-  print "in preprocess ",var2, " ",norm2
+#  print "in preprocess ",var1, " ",norm1
+#  print "in preprocess ",var2, " ",norm2
 
   ops = { "+": operator.add , 
           "-": operator.subtract, 
           "*": operator.multiply, 
           "/": operator.divide  }
 
-  # nc_combination , combi_name = combine_two_indecies_netcdf(nc1, nc2, operation, output,callback=callback)
-  # callback("combo time received: "+str(netCDF4.num2date( nc_combination.variables['time'][0] , nc_combination.variables['time'].units ,calendar='standard')),3)
-  # parse operator symbol to function
+# nc_combination , combi_name = combine_two_indecies_netcdf(nc1, nc2, operation, output,callback=callback)
+# callback("combo time received: "+str(netCDF4.num2date( nc_combination.variables['time'][0] , nc_combination.variables['time'].units ,calendar='standard')),3)
+# parse operator symbol to function
   op_char = operator_symbol
   op_func = ops[op_char]
 
@@ -122,14 +124,17 @@ def combine(  var1, norm1 , var2 , norm2 , operator_symbol ):
 
 
 def postprocess(combi_variable,nc_combo_file): #,operation):
-  print "in postprocess ", nc_combo_file
+
+  print "in postprocess ", type(combi_variable)
 
   nc_combo_file[0].variables[nc_combo_file[1]][:]   =  combi_variable
+
+  print "in postprocess ", type(nc_combo_file[0])
 
   return nc_combo_file
 
 def getTitleNC(nc_fid):
-  print str(nc_fid)
+#  print str(nc_fid)
   var = None
   for k1 , v in nc_fid.variables.iteritems():
     if "grid_mapping" in v.ncattrs():
