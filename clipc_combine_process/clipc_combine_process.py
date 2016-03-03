@@ -89,7 +89,8 @@ def combine_two_indecies_wcs(wcs_url1,
   output_file3='combine.nc' ,
   width=200,
   height=200,
-  callback=defaultCallback):
+  callback=defaultCallback,
+  certfile=None):
 
   # wcs combo
   defaultCallback('Combine Two Web Coverage Service operations with: '+str(operator_symbol),1)
@@ -101,9 +102,9 @@ def combine_two_indecies_wcs(wcs_url1,
   defaultCallback('height:   '+str(height),1)
   defaultCallback('width:    '+str(width),1)
 
-  nc1 = wcsrequest.getWCS(wcs_url1, bbox, time1, output_file1,width=width,height=height,callback=callback)
+  nc1 = wcsrequest.getWCS(wcs_url1, bbox, time1, output_file1,width=width,height=height,callback=callback,certfile=certfile)
 
-  nc2 = wcsrequest.getWCS(wcs_url2, bbox, time2, output_file2,width=width,height=height,callback=callback)  
+  nc2 = wcsrequest.getWCS(wcs_url2, bbox, time2, output_file2,width=width,height=height,callback=callback,certfile=certfile)  
   
   defaultCallback("Combining",2);
   

@@ -10,6 +10,7 @@ import urllib2
 import urllib
 import xml.etree.ElementTree as et
 import crsbbox
+
 #import random
 
 def defaultCallback(message,percentage):
@@ -21,7 +22,8 @@ def getWCS( wcs_url1,
 			output_file='wcs_output.nc',
 			width=300,
 			height=300,
-			callback=defaultCallback ):
+			callback=defaultCallback,
+			certfile=None):
 
 	# Describe Coverage: used to id layer,
 	# data also available in getCapabilities...
@@ -32,7 +34,11 @@ def getWCS( wcs_url1,
 	print request_describe
 
 	#print request_describe
-	response = urllib2.urlopen( request_describe )
+	if certfile != None:
+          opener = urllib.URLopener(key_file =certfile, cert_file = certfile)
+          response = opener.open(request_describe)
+        else:
+          response = urllib2.urlopen( request_describe )
 	xmlresponse = response.read()
 	tree = et.fromstring(xmlresponse)
 
@@ -71,8 +77,11 @@ def getWCS( wcs_url1,
 	request =  wcs_url1 + "&" + str(data)
 
 	defaultCallback(request,4)
-
-	response = urllib2.urlopen( request )
+	if certfile != None:
+          opener = urllib.URLopener(key_file =certfile, cert_file = certfile)
+          response = opener.open(request_describe)
+	else:
+          response = urllib2.urlopen( request )
 
 	output = output_file
 	out = open( output , 'wb')
